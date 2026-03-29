@@ -85,17 +85,20 @@
 
         function clean(t, n) { return t.split(/\s+/).map(m => m.trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase()).filter(m => m.length === n); }
         const MOTS5 = clean(TEXTE_5, 5);
-        const MOTS6 = clean(TEXTE_6, 6);
-        const TOUS = [...MOTS5, ...MOTS6];
-        const dateRef = new Date("2026-03-27").setHours(0,0,0,0);
-        const mtnDate = new Date().setHours(0,0,0,0);
-        const indexJour = Math.floor((mtnDate - dateRef) / 86400000);
+    const MOTS6 = clean(TEXTE_6, 6);
+    
+    // On fusionne les deux listes
+    const TOUS = [...MOTS5, ...MOTS6];
 
-        const motDuJour = LISTE_MOTS[indexJour % LISTE_MOTS.length];
-        const longueurDuJour = motDuJour.length;
+    const dateRef = new Date("2026-03-27").setHours(0,0,0,0);
+    const mtnDate = new Date().setHours(0,0,0,0);
+    const indexJour = Math.floor((mtnDate - dateRef) / 86400000);
 
-        let essai = 0, curseur = 0, proposition = "", fini = false, emojis = [];
+    // Correction ici : on utilise "TOUS" (le nom de votre variable fusionnée)
+    const motDuJour = TOUS[indexJour % TOUS.length];
+    const longueurDuJour = motDuJour.length;
 
+    let essai = 0, curseur = 0, proposition = "", fini = false, emojis = [];
         // --- INITIALISATION ---
         function init() {
             animerTitre();
