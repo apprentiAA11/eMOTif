@@ -16,7 +16,18 @@
 
     body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
     header { text-align: center; margin-bottom: 5px; }
-    h1 { margin: 5px 0; letter-spacing: 4px; border-bottom: 3px solid var(--text); font-size: 2rem; }
+    h1 { 
+    margin: 5px 0; 
+    letter-spacing: 4px; 
+    border-bottom: 3px solid var(--text); 
+    font-size: 2rem;
+    animation: glow 2s infinite alternate; 
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 2px transparent; }
+    to { text-shadow: 0 0 10px var(--primary); color: var(--primary); }
+}
     .date-heure { font-size: 0.9rem; color: #666; margin-bottom: 10px; height: 20px; font-weight: 500; }
 
     .grille { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
@@ -50,6 +61,28 @@
     #timer { font-weight: bold; margin: 15px 0; font-size: 1.1rem; color: var(--text); text-transform: uppercase; }
     #message { height: 30px; font-weight: bold; margin-bottom: 10px; color: var(--text); text-align: center; }
     .btn-partager { padding: 14px; background-color: var(--primary) !important; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; text-transform: uppercase; }
+/* Animation quand on tape une lettre */
+.pop { animation: pop 0.1s ease-in-out; }
+@keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Animation de basculement des cases */
+.flip { animation: flip 0.5s ease-in-out; }
+@keyframes flip {
+    0% { transform: rotateX(0); }
+    100% { transform: rotateX(360deg); }
+}
+
+/* Vibration si le mot est inconnu */
+.secousse { animation: secousse 0.3s; }
+@keyframes secousse {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
 </style>
 </head>
 <body>
@@ -154,52 +187,72 @@
    }
         }
 
-        function taper(l) { if(!fini && proposition.length < longueurDuJour) { document.getElementById(`c-${essai}-${curseur}`).innerText=l; proposition+=l; curseur++; } }
+        function taper(l) { 
+    if(!fini && proposition.length < longueurDuJour) { 
+        const caseElt = document.getElementById(`c-${essai}-${curseur}`);
+        caseElt.innerText = l; 
+        caseElt.classList.add("pop"); // Ajoute le petit zoom
+        setTimeout(() => caseElt.classList.remove("pop"), 100); 
+        proposition += l; 
+        curseur++; 
+    } 
+}
         function effacer() { if(!fini && curseur > 0) { curseur--; proposition=proposition.slice(0,-1); document.getElementById(`c-${essai}-${curseur}`).innerText=""; } }
 
         function valider() {
-            if(fini || proposition.length < longueurDuJour) return;
-            if(!TOUS.includes(proposition)) { 
-                document.getElementById("message").innerText = "Mot inconnu"; 
-                setTimeout(()=>document.getElementById("message").innerText="", 2000); 
-                return; 
+    if(fini || proposition.length < longueurDuJour) return;
+
+    const grilleLigne = document.querySelectorAll(".ligne")[essai];
+
+    if(!TOUS.includes(proposition)) { 
+        // Effet de vibration sur la ligne actuelle
+        grilleLigne.classList.add("secousse");
+        document.getElementById("message").innerText = "Mot inconnu"; 
+        
+        setTimeout(() => {
+            grilleLigne.classList.remove("secousse");
+            document.getElementById("message").innerText = "";
+        }, 1000);
+        return; 
+    }
+
+    let res = new Array(longueurDuJour).fill(0);
+    let check = motDuJour.split('');
+    for(let i=0; i<longueurDuJour; i++) if(proposition[i]===motDuJour[i]) { res[i]=2; check[i]=null; }
+    for(let i=0; i<longueurDuJour; i++) if(res[i]!==2) { let idx=check.indexOf(proposition[i]); if(idx!==-1) { res[i]=1; check[idx]=null; } }
+
+    emojis.push(res.map(v => v===2 ? "🟩" : v===1 ? "🟨" : "⬛").join(''));
+
+    for(let i=0; i<longueurDuJour; i++) {
+        const c = document.getElementById(`c-${essai}-${i}`);
+        const lettre = proposition[i];
+        const cl = res[i]===2 ? "vert" : res[i]===1 ? "orange" : "gris";
+        
+        setTimeout(() => {
+            c.classList.add("flip"); // Ajoute l'animation de bascule
+            c.classList.add(cl); // Change la couleur pendant la bascule
+            
+            const t = document.getElementById(`key-${lettre}`);
+            if(t) {
+                if(res[i]===2) t.className = "touche vert";
+                else if(res[i]===1 && !t.classList.contains("vert")) t.className = "touche orange";
+                else if(res[i]===0 && !t.classList.contains("vert") && !t.classList.contains("orange")) t.className = "touche gris";
             }
+        }, i * 200); // On espace un peu plus (200ms) pour voir l'effet l'un après l'autre
+    }
 
-            let res = new Array(longueurDuJour).fill(0);
-            let check = motDuJour.split('');
-            for(let i=0; i<longueurDuJour; i++) if(proposition[i]===motDuJour[i]) { res[i]=2; check[i]=null; }
-            for(let i=0; i<longueurDuJour; i++) if(res[i]!==2) { let idx=check.indexOf(proposition[i]); if(idx!==-1) { res[i]=1; check[idx]=null; } }
-
-            emojis.push(res.map(v => v===2 ? "🟩" : v===1 ? "🟨" : "⬛").join(''));
-
-            for(let i=0; i<longueurDuJour; i++) {
-                const c = document.getElementById(`c-${essai}-${i}`);
-                const lettre = proposition[i];
-                const cl = res[i]===2 ? "vert" : res[i]===1 ? "orange" : "gris";
-                setTimeout(() => {
-                    c.classList.add(cl);
-                    const t = document.getElementById(`key-${lettre}`);
-                    if(t) {
-                        if(res[i]===2) t.className = "touche vert";
-                        else if(res[i]===1 && !t.classList.contains("vert")) t.className = "touche orange";
-                        else if(res[i]===0 && !t.classList.contains("vert") && !t.classList.contains("orange")) t.className = "touche gris";
-                    }
-                }, i * 100);
-            }
-
-            if(proposition === motDuJour) {
-                fini = true; 
-                setTimeout(() => { confetti(); updateStats(true); }, 1000);
-            } else if(essai === 5) {
-                fini = true; 
-                // On ne met plus rien dans document.getElementById("message")
-                setTimeout(() => updateStats(false), 1000); 
-            } else { 
-                essai++; 
-                curseur = 0; 
-                proposition = ""; 
-            }
-        }
+    if(proposition === motDuJour) {
+        fini = true; 
+        setTimeout(() => { confetti(); updateStats(true); }, longueurDuJour * 200 + 500);
+    } else if(essai === 5) {
+        fini = true; 
+        setTimeout(() => updateStats(false), longueurDuJour * 200 + 500); 
+    } else { 
+        essai++; 
+        curseur = 0; 
+        proposition = ""; 
+    }
+}
 
         function updateStats(win) {
             let s = JSON.parse(localStorage.getItem('stats_motif')) || { p: 0, v: 0, currentS: 0, maxS: 0, dist: [0,0,0,0,0,0] };
