@@ -190,7 +190,33 @@
             document.getElementById('date-complete').innerText = mtn.toLocaleTimeString('fr-FR');
             document.getElementById('timer').innerText = `PROCHAIN MOT : 11:45:00`;
         }, 1000);
+function animerTitre() {
+    const titre = "MOT DU JOUR";
+    const container = document.getElementById("titre-anime");
+    
+    // Définis la séquence de couleurs pour chaque lettre
+    const couleurs = ["c-vert", "c-orange", "c-vert", "c-space", "c-gris", "c-orange", "c-gris", "c-space", "c-vert", "c-orange", "c-gris"];
+    
+    container.innerHTML = ""; // On vide au cas où
+    
+    titre.split("").forEach((lettre, index) => {
+        const span = document.createElement("span");
+        
+        // Gère l'espace de manière invisible
+        span.innerText = lettre === " " ? "\u00A0" : lettre;
+        
+        // Applique la couleur de départ et la classe d'animation
+        const couleurCl = couleurs[index] || "c-gris"; // Utilise la séquence ou gris par défaut
+        span.className = `lettre-anim ${couleurCl}`;
+        
+        span.style.animationDelay = `${index * 0.12}s`; // Décale l'apparition de chaque lettre
+        
+        container.appendChild(span);
+    });
+}
 
+// Appelle l'animation au lancement
+animerTitre();
         init();
     </script>
 </body>
