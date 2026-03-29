@@ -4,53 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-MOT-IF 🇫🇷</title>
-    <style>
-        :root {
-            --bg: #f8f9fa;
-            --primary: #6aaa64; 
-            --accent: #c9b458;  
-            --gris: #787c7e;    
-            --text: #1a1a1b;    
-            --border: #d3d6da;
+   <style>
+    :root {
+        --bg: #f8f9fa;
+        --primary: #6aaa64; /* VERT */
+        --accent: #c9b458;  /* ORANGE */
+        --gris: #787c7e;    /* GRIS */
+        --text: #1a1a1b;    /* NOIR final */
+        --border: #d3d6da;
+    }
+
+    body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
+    header { text-align: center; margin-bottom: 5px; }
+    
+    /* Le titre de base */
+    h1 { margin: 5px 0; letter-spacing: 4px; border-bottom: 3px solid var(--text); font-size: 2rem; display: inline-block; }
+
+    /* L'animation de chaque lettre */
+    .lettre-anim {
+        display: inline-block;
+        animation: bounce-color 0.8s ease forwards;
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    /* Les couleurs de l'arc-en-ciel au début de l'animation */
+    .c-vert   { --c-start: var(--primary); }
+    .c-orange { --c-start: var(--accent); }
+    .c-gris   { --c-start: var(--gris); }
+    .c-space  { --c-start: transparent; } /* L'espace est transparent */
+
+    @keyframes bounce-color {
+        0% { 
+            opacity: 0; 
+            transform: translateY(20px) scale(0.8); 
+            color: var(--c-start); /* Commence coloré */
         }
-
-        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; background-color: var(--bg); color: var(--text); margin: 0; padding: 10px; }
-        header { text-align: center; margin-bottom: 5px; }
-        h1 { margin: 5px 0; letter-spacing: 4px; border-bottom: 3px solid var(--text); font-size: 2rem; }
-        .date-heure { font-size: 0.9rem; color: #666; margin-bottom: 10px; height: 20px; font-weight: 500; }
-
-        .grille { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
-        .ligne { display: grid; gap: 6px; justify-content: center; }
-        .case { width: 52px; height: 52px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: bold; text-transform: uppercase; background: white; border-radius: 4px; }
-
-        .vert { background-color: var(--primary) !important; color: white; border-color: var(--primary); }
-        .orange { background-color: var(--accent) !important; color: white; border-color: var(--accent); }
-        .gris { background-color: var(--gris) !important; color: white; border-color: var(--gris); }
-
-        .clavier { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 500px; padding-bottom: 20px; }
-        .clavier-ligne { display: flex; gap: 5px; justify-content: center; }
-        .touche { background: #d3d6da; border: none; padding: 18px 0; border-radius: 4px; font-weight: bold; cursor: pointer; flex: 1; text-transform: uppercase; }
-        .touche.large { flex: 1.5; font-size: 0.8rem; }
-
-        #modal-stats { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 15px; box-shadow: 0 0 40px rgba(0,0,0,0.4); z-index: 1000; text-align: center; width: 330px; }
-        #modal-stats h2 { margin-top: 0; font-size: 1.2rem; color: var(--text); text-transform: uppercase; }
-        .stats-grid { display: flex; justify-content: space-between; margin: 20px 0; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-        .stat-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
-        .stat-val { font-size: 1.6rem; font-weight: bold; color: var(--primary) !important; }
-        .stat-label { font-size: 0.65rem; color: #1a1a1b; text-transform: uppercase; margin-top: 3px; font-weight: 600; }
-
-        .dist-container { text-align: left; margin: 15px 0; color: var(--text); }
-        .bar-row { display: flex; align-items: center; margin-bottom: 5px; font-size: 0.8rem; }
-        .bar-label { width: 15px; font-weight: bold; }
-        .bar-outer { flex-grow: 1; margin-left: 8px; }
-        .bar-inner { background: var(--gris); color: white; padding: 2px 8px; border-radius: 3px; font-weight: bold; min-width: 25px; text-align: right; }
-        .bar-inner.actuelle { background-color: var(--primary) !important; }
-
-        #timer { font-weight: bold; margin: 15px 0; font-size: 1.1rem; color: var(--text); text-transform: uppercase; }
-        #message { height: 30px; font-weight: bold; margin-bottom: 10px; color: var(--text); text-align: center; }
-
-        .btn-partager { padding: 14px; background-color: var(--primary) !important; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; text-transform: uppercase; }
-    </style>
+        50% { 
+            opacity: 1; 
+            transform: translateY(-8px) scale(1.1); 
+            color: var(--c-start); /* Reste coloré au sommet */
+        }
+        100% { 
+            opacity: 1; 
+            transform: translateY(0) scale(1); 
+            color: var(--text); /* Devient noir à la fin */
+        }
+    }
+</style>
 </head>
 <body>
 
