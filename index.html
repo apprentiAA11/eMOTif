@@ -227,6 +227,22 @@
         });
 
         init();
+
+<button onclick="recupererMesStats()" style="margin-top:50px; opacity:0.1; background:none; border:none;">.</button>
+
+<script>
+function recupererMesStats() {
+    const stats = {
+        p: 3,           // 3 parties jouées
+        v: 3,           // 3 victoires
+        currentS: 3,    // Série de 3
+        maxS: 3,        // Record de 3
+        dist: [0, 1, 1, 1, 0, 0] // Répartition sur les essais 2, 3 et 4
+    };
+    localStorage.setItem('stats_motif', JSON.stringify(stats));
+    alert("Stats iPad restaurées : 3 Victoires !");
+    location.reload();
+}
     </script>
 </body>
 </html>
