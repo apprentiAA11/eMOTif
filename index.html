@@ -199,8 +199,21 @@
 
         setInterval(() => {
             const mtn = new Date();
-            document.getElementById('date-complete').innerText = mtn.toLocaleTimeString('fr-FR');
-            document.getElementById('timer').innerText = `PROCHAIN MOT : 11:45:00`;
+            // Cette ligne rajoute le jour et le mois :
+            const dateFr = mtn.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'});
+            const heureFr = mtn.toLocaleTimeString('fr-FR');
+            
+            document.getElementById('date-complete').innerText = `${dateFr} • ${heureFr}`;
+            
+            // Calcul du compte à rebours (timer)
+            const demain = new Date();
+            demain.setHours(24,0,0,0);
+            const diff = demain - mtn;
+            const h = String(Math.floor(diff/3600000)).padStart(2, '0');
+            const m = String(Math.floor((diff%3600000)/60000)).padStart(2, '0');
+            const s = String(Math.floor((diff%60000)/1000)).padStart(2, '0');
+            
+            document.getElementById('timer').innerText = `PROCHAIN MOT : ${h}:${m}:${s}`;
         }, 1000);
 function animerTitre() {
     const titre = "MOT DU JOUR";
