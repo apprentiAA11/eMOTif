@@ -187,12 +187,6 @@
             navigator.clipboard.writeText(texte).then(() => alert("Score copié !"));
         }
 
-        function recupererMesStats() {
-            localStorage.setItem('stats_motif', JSON.stringify({p:3, v:3, currentS:3, maxS:3, dist:[0,1,1,1,0,0]}));
-            alert("Record de 3 restauré !");
-            location.reload();
-        }
-
         setInterval(() => {
             const mtn = new Date();
             document.getElementById('date-complete').innerText = mtn.toLocaleTimeString('fr-FR');
