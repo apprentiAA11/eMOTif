@@ -111,7 +111,7 @@
     const TOUS = [...MOTS5, ...MOTS6];
 
     // 3. Calcul du jour (On commence au 29 Mars 2026 pour être à l'index 0 aujourd'hui)
-    const dateRef = new Date("2026-03-29").setHours(0,0,0,0);
+    const dateRef = new Date("2026-03-30").setHours(0,0,0,0);
     const indexJour = Math.floor((new Date().setHours(0,0,0,0) - dateRef) / 86400000);
     
     // Alternance 5 ou 6 lettres selon le jour
