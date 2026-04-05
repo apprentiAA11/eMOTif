@@ -40,7 +40,10 @@
 
     .clavier { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 500px; padding-bottom: 20px; }
     .clavier-ligne { display: flex; gap: 5px; justify-content: center; }
-    .touche { background: #d3d6da; border: none; padding: 18px 0; border-radius: 4px; font-weight: bold; cursor: pointer; flex: 1; text-transform: uppercase; }
+    .touche { background: #d3d6da; border: none; padding: 18px 0; border-radius: 4px; font-weight: bold; cursor: pointer; flex: 1; text-transform: uppercase; touch-action: manipulation; /* Bloque le zoom au double-tap sur les boutons */
+    user-select: none;          /* Empêche de sélectionner le texte de la lettre */
+    -webkit-user-select: none;  /* Pour Safari iPad */
+}
     .touche.large { flex: 1.5; font-size: 0.8rem; }
 
     #modal-stats { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 25px; border-radius: 15px; box-shadow: 0 0 40px rgba(0,0,0,0.4); z-index: 1000; text-align: center; width: 330px; }
